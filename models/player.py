@@ -23,8 +23,8 @@ class Player(DataClassJsonMixin):
             return
 
         old_information = self.information[information_index]
-        old_information.modified_by.add(admin_name)
-        old_information.modified = time.time()
+        old_information.modified_by = admin_name
+        old_information.modified_timestamp = time.time()
         old_information.info = information_text
 
     def get_information_at_index(self, information_index: int) -> Optional[Information]:

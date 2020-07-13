@@ -12,11 +12,17 @@ alias: !a
 
 Adds information to the player name. Each player can have a list of information
 
-#### !edit \<player name\>
+#### !edit \<player name\> \<information index\>
 
 alias: !e
 
-Edits an information entry of a player
+Edits an information entry of a player. 
+
+Example: 
+    
+    !edit uthermal 0 macro god
+
+which edits the first information entry
 
 #### !delele \<player name\>
 
