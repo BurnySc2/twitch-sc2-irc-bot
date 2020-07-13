@@ -30,9 +30,10 @@ jobs:
         run: |
           poetry install
 
-      - name: Test with pytest
-        run: |
-          poetry run pytest
+      # TODO Run tests
+#      - name: Test with pytest
+#        run: |
+#          poetry run pytest
 
       # Push files to remote server
       # https://github.com/marketplace/actions/scp-files
