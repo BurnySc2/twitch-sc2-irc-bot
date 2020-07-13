@@ -27,6 +27,7 @@ class Players(DataClassJsonMixin):
     def add_information(self, author_name: str, content_string: str) -> bool:
         # Split content: head (player name) and rest (player information)
         player_name, *new_information = content_string.split(" ")
+        player_name: str = player_name.lower()
         new_information = " ".join(new_information)
 
         if not new_information:
@@ -39,9 +40,9 @@ class Players(DataClassJsonMixin):
 
     def edit_information(self, author_name: str, content_string: str) -> bool:
         # Split content: head (player name), index and rest (player information)
-        player_name: str
-        information_index: str
         player_name, information_index, *new_information = content_string.split(" ")
+        information_index: str
+        player_name: str = player_name.lower()
         new_information = " ".join(new_information)
 
         if not new_information:
@@ -58,8 +59,8 @@ class Players(DataClassJsonMixin):
 
     def delete_information(self, content_string: str) -> bool:
         # Split content: head (player name) and rest (player information)
-        player_name: str
         player_name, *_ = content_string.split(" ")
+        player_name: str = player_name.lower()
 
         if not player_name:
             # TODO Add error: player_name is empty or new_information is empty = incorrect command usage

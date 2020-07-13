@@ -200,6 +200,7 @@ class TwitchChatBot(commands.Bot):
 
         logger.info(f"Trying to get information ({author.name}): {content}")
         player_name, *rest = content.split(" ")
+        player_name: str = player_name.lower()
         if not player_name:
             # Command was given but no username argument was given
             # TODO Raise error?
@@ -285,7 +286,7 @@ class TwitchChatBot(commands.Bot):
         added_users = []
         for user_name in user_names:
             logger.info(f"Adding {user_name} to {user_type} (command by {ctx.author.name})")
-            added = add_user_function(user_name)
+            added = add_user_function(user_name.lower())
             if added:
                 added_users.append(user_name)
 
@@ -342,6 +343,7 @@ class TwitchChatBot(commands.Bot):
 
         new_channels = []
         for channel_name in channel_names:
+            channel_name: str = channel_name.lower()
             if channel_name not in self.channels.channels:
                 logger.info(f"Adding channel ({ctx.author.name}): {channel_name}")
                 new_channels.append(channel_name)
@@ -361,6 +363,7 @@ class TwitchChatBot(commands.Bot):
 
         new_channels = []
         for channel_name in channel_names:
+            channel_name: str = channel_name.lower()
             if channel_name in self.channels.channels:
                 logger.info(f"Deleting channel ({ctx.author.name}): {channel_name}")
                 new_channels.append(channel_name)
