@@ -122,7 +122,10 @@ class TwitchChatBot(commands.Bot):
 
     async def event_message(self, message: TwitchMessage):
         # print(message.content)
-        await self.handle_commands(message)
+        try:
+            await self.handle_commands(message)
+        except Exception as e:
+            logger.trace(f"Error while receiving a message")
 
     ############ COMMANDS
     @commands.command(name="add", aliases=["a"])
@@ -182,8 +185,8 @@ class TwitchChatBot(commands.Bot):
             self.save_players()
             logger.info(f"Deleted information ({author.name}): {content}")
             await ctx.send(f"Removed all information about player '{player_name}'")
-        else:
-            await ctx.send(f"There was no information about player '{player_name}'")
+            return
+        await ctx.send(f"There was no information about player '{player_name}'")
 
     @commands.command(name="info", aliases=["i"])
     async def get_information(self, ctx: TwitchContext):
@@ -233,7 +236,12 @@ class TwitchChatBot(commands.Bot):
 
     @commands.command(name="list", aliases=["l"])
     async def list_all_player_names(self, ctx: TwitchContext):
-        """ List all player names which have some information about them. """
+        """ List all player names which the bot has information about. """
+        # TODO
+
+    @commands.command(name="list", aliases=["l"])
+    async def list_all_channel_names(self, ctx: TwitchContext):
+        """ List all channel names the bot is connected to. """
         # TODO
 
     ############ COMMANDS - Adding and removing users and channels
