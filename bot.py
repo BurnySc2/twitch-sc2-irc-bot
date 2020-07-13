@@ -228,6 +228,7 @@ class TwitchChatBot(commands.Bot):
                 response_string = f"Player '{player_name}': {repr(information_list[0])}"
 
         logger.info(f"Got information ({author.name}): {content}\nResponse: {response_string}")
+        # TODO What if the response string is longer than the twitch message limit?
         await ctx.send(f"{response_string}")
 
     @commands.command(name="list", aliases=["l"])
