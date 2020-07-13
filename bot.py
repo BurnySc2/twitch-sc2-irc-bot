@@ -104,11 +104,11 @@ class TwitchChatBot(commands.Bot):
     def save_channels(self):
         os.makedirs(self.channels_file_path.parent, exist_ok=True)
         with self.channels_file_path.open("w") as f:
-            f.write(self.users.to_json(indent=4))
+            f.write(self.channels.to_json(indent=4))
 
     def save_users(self):
-        os.makedirs(self.players_file_path.parent, exist_ok=True)
-        with self.players_file_path.open("w") as f:
+        os.makedirs(self.users_file_path.parent, exist_ok=True)
+        with self.users_file_path.open("w") as f:
             f.write(self.users.to_json(indent=4))
 
     def save_players(self):
