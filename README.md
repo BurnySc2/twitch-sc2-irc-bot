@@ -24,7 +24,7 @@ Example:
 
 which edits the first information entry
 
-#### !delele \<player name\>
+#### !delete \<player name\>
 
 alias: !del, !d
 

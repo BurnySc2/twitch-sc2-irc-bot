@@ -286,6 +286,7 @@ class TwitchChatBot(commands.Bot):
         added_users = []
         for user_name in user_names:
             logger.info(f"Adding {user_name} to {user_type} (command by {ctx.author.name})")
+            # TODO Add information about who gave this person admin or user status
             added = add_user_function(user_name.lower())
             if added:
                 added_users.append(user_name)
