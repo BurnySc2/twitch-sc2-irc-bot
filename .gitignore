@@ -114,3 +114,6 @@ main.log
 
 # Ignore local data folder
 /data
+
+# Ignore config folder
+/config
