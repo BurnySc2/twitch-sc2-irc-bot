@@ -25,7 +25,6 @@ class Information(DataClassJsonMixin):
     @property
     def info_detailled(self) -> str:
         last_modified_name = self.created_by if not self.modified_by else self.modified_by
-        last_modified_time: arrow.Arrow = arrow.get(
-            self.created_timestamp
-        ) if not self.modified_timestamp else arrow.get(self.modified_timestamp)
+        latest_time = self.created_timestamp if not self.modified_timestamp else self.modified_by
+        last_modified_time: arrow.Arrow = arrow.get(int(latest_time))
         return f"'{self.info}' was last modified by '{last_modified_name}' on {last_modified_time} which was {last_modified_time.humanize()}."
