@@ -50,7 +50,7 @@ alias: !addadmins , !aa
 
 Adds all usernames after the command to the admins. See 'Permissions' on what admins can do
 
-#### !delsuperadmin \<twitch user name\>
+#### !deladmin \<twitch user name\>
 
 alias: !deladmins, !da
 
