@@ -137,14 +137,19 @@ class TwitchChatBot(commands.Bot):
 
         logger.info(f"Trying to add information ({author_name}): {content}")
         if not self.users.allowed_to_add_information(author_name):
+            logger.info(f"User {author_name} not allowed to add information")
             return
 
-        should_save_new_players_json = self.players.add_information(author_name, content)
-        if should_save_new_players_json:
+        player_name, *_ = content.split(" ")
+        player = self.players.get_player(player_name)
+        previous_information_amount = len(player.information)
+        new_amount_information = self.players.add_information(author_name, content)
+        if previous_information_amount != new_amount_information:
             self.save_players()
-            player_name, *_ = content.split(" ")
-            logger.info(f"Added information ({author_name}): {content}")
-            await ctx.send(f"Added new information for player '{player_name}'")
+            logger.info(
+                f"Added information ({previous_information_amount} -> {new_amount_information}) ({author_name}): {content}"
+            )
+            await ctx.send(f"Added #{new_amount_information} information for player '{player_name}'")
 
     @commands.command(name="edit", aliases=["e"])
     async def edit_information(self, ctx: TwitchContext):
@@ -155,6 +160,7 @@ class TwitchChatBot(commands.Bot):
 
         logger.info(f"Trying to edit information ({author_name}): {content}")
         if not self.users.allowed_to_edit_information(author_name):
+            logger.info(f"User {author_name} not allowed to edit information")
             return
 
         should_save_new_players_json = self.players.edit_information(author_name, content)
@@ -173,17 +179,18 @@ class TwitchChatBot(commands.Bot):
 
         logger.info(f"Trying to delete information ({author.name}): {content}")
         if not self.users.allowed_to_delete_information(author.name):
+            logger.info(f"User {author.name} not allowed to delete information")
             return
 
-        should_save_new_players_json = self.players.delete_information(content)
         player_name, *_ = content.split(" ")
         if not player_name:
             # TODO Incorrect command usage
             return
 
-        if should_save_new_players_json:
+        removed_player = self.players.delete_information(content)
+        if removed_player:
             self.save_players()
-            logger.info(f"Deleted information ({author.name}): {content}")
+            logger.info(f"Deleted information ({author.name}): {content}\nRemoved entry: {removed_player}")
             await ctx.send(f"Removed all information about player '{player_name}'")
             return
         await ctx.send(f"There was no information about player '{player_name}'")
@@ -196,6 +203,7 @@ class TwitchChatBot(commands.Bot):
         content: str = " ".join(raw_content.split(" ")[1:])
 
         if not self.users.allowed_to_get_information(author.name):
+            logger.info(f"User {author.name} not allowed to get information")
             return
 
         logger.info(f"Trying to get information ({author.name}): {content}")
@@ -235,12 +243,12 @@ class TwitchChatBot(commands.Bot):
         # TODO What if the response string is longer than the twitch message limit?
         await ctx.send(f"{response_string}")
 
-    @commands.command(name="list", aliases=["l"])
+    @commands.command(name="listplayers", aliases=["lp"])
     async def list_all_player_names(self, ctx: TwitchContext):
         """ List all player names which the bot has information about. """
         # TODO
 
-    @commands.command(name="list", aliases=["l"])
+    @commands.command(name="listchannels", aliases=["lc"])
     async def list_all_channel_names(self, ctx: TwitchContext):
         """ List all channel names the bot is connected to. """
         # TODO

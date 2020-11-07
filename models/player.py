@@ -17,10 +17,8 @@ class Player(DataClassJsonMixin):
         self.information.append(new_information)
 
     def edit_information(self, information_index: int, information_text: str, admin_name: str):
-        # Out of range
-        if information_index >= len(self.information):
-            # TODO Return error
-            return
+        # Index out of range already checked in Players.edit_information
+        assert information_index < len(self.information)
 
         old_information = self.information[information_index]
         old_information.modified_by = admin_name
