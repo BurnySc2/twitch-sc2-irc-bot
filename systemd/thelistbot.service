@@ -1,0 +1,11 @@
+[Service]
+ExecStart=/usr/local/bin/poetry run python bot.py
+Restart=always
+RestartSec=60
+SyslogIdentifier=thelistbot
+User=thelistbot
+Group=thelistbot
+WorkingDirectory=/home/thelistbot/thelistbot/
+
+[Install]
+WantedBy=multi-user.target
