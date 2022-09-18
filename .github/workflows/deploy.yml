@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
       - uses: actions/checkout@v1
@@ -53,7 +53,7 @@ jobs:
           script: |
             sudo /bin/systemctl stop ${{ env.SERVICENAME }}
             sudo /bin/systemctl disable ${{ env.SERVICENAME }}
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.7'
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
 
       # Send files to server
       - name: Update server files
@@ -70,7 +70,7 @@ jobs:
           passphrase: ""
           source: "."
           target: "/home/${{ env.USERNAME }}/${{ env.USERNAME }}"
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.7'
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
 
       # Updating .service file requires target machine to have existing /etc/systemd/system/${{env.SERVICENAME}}.service file and chown to this user
       # Disabling and enabling service requires entries in the visudo file with
@@ -94,4 +94,4 @@ jobs:
             sudo /bin/systemctl daemon-reload
             sudo /bin/systemctl enable ${{ env.SERVICENAME }}
             sudo /bin/systemctl start ${{ env.SERVICENAME }}
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.7'
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
