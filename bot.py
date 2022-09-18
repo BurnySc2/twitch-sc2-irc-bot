@@ -1,5 +1,4 @@
 from twitchio.ext import commands
-from twitchio import User as TwitchUser
 from twitchio import Message as TwitchMessage
 from twitchio.ext.commands import Context as TwitchContext
 
@@ -131,7 +130,7 @@ class TwitchChatBot(commands.Bot):
     @commands.command(name="add", aliases=["a"])
     async def add_information(self, ctx: TwitchContext):
         author_name: str = ctx.author.name
-        raw_content: str = ctx.content
+        raw_content: str = ctx.message.content
         # Without the command:
         content: str = " ".join(raw_content.split(" ")[1:])
 
@@ -154,7 +153,7 @@ class TwitchChatBot(commands.Bot):
     @commands.command(name="edit", aliases=["e"])
     async def edit_information(self, ctx: TwitchContext):
         author_name: str = ctx.author.name
-        raw_content: str = ctx.content
+        raw_content: str = ctx.message.content
         # Without the command:
         content: str = " ".join(raw_content.split(" ")[1:])
 
@@ -172,14 +171,14 @@ class TwitchChatBot(commands.Bot):
 
     @commands.command(name="delete", aliases=["del", "d"])
     async def delete_information(self, ctx: TwitchContext):
-        author: TwitchUser = ctx.author
-        raw_content: str = ctx.content
+        author_name: str = ctx.author.name
+        raw_content: str = ctx.message.content
         # Without the command:
         content: str = " ".join(raw_content.split(" ")[1:])
 
-        logger.info(f"Trying to delete information ({author.name}): {content}")
-        if not self.users.allowed_to_delete_information(author.name):
-            logger.info(f"User {author.name} not allowed to delete information")
+        logger.info(f"Trying to delete information ({author_name}): {content}")
+        if not self.users.allowed_to_delete_information(author_name):
+            logger.info(f"User {author_name} not allowed to delete information")
             return
 
         player_name, *_ = content.split(" ")
@@ -190,23 +189,23 @@ class TwitchChatBot(commands.Bot):
         removed_player = self.players.delete_information(content)
         if removed_player:
             self.save_players()
-            logger.info(f"Deleted information ({author.name}): {content}\nRemoved entry: {removed_player}")
+            logger.info(f"Deleted information ({author_name}): {content}\nRemoved entry: {removed_player}")
             await ctx.send(f"Removed all information about player '{player_name}'")
             return
         await ctx.send(f"There was no information about player '{player_name}'")
 
     @commands.command(name="info", aliases=["i"])
     async def get_information(self, ctx: TwitchContext):
-        author: TwitchUser = ctx.author
-        raw_content: str = ctx.content
+        author_name: str = ctx.author.name
+        raw_content: str = ctx.message.content
         # Without the command:
         content: str = " ".join(raw_content.split(" ")[1:])
 
-        if not self.users.allowed_to_get_information(author.name):
-            logger.info(f"User {author.name} not allowed to get information")
+        if not self.users.allowed_to_get_information(author_name):
+            logger.info(f"User {author_name} not allowed to get information")
             return
 
-        logger.info(f"Trying to get information ({author.name}): {content}")
+        logger.info(f"Trying to get information ({author_name}): {content}")
         player_name, *rest = content.split(" ")
         player_name: str = player_name.lower()
         if not player_name:
@@ -239,7 +238,7 @@ class TwitchChatBot(commands.Bot):
             else:
                 response_string = f"Player '{player_name}': {repr(information_list[0])}"
 
-        logger.info(f"Got information ({author.name}): {content}\nResponse: {response_string}")
+        logger.info(f"Got information ({author_name}): {content}\nResponse: {response_string}")
         # TODO What if the response string is longer than the twitch message limit?
         await ctx.send(f"{response_string}")
 
@@ -274,11 +273,11 @@ class TwitchChatBot(commands.Bot):
         permission_function: Callable[[str], bool] = add_permission[user_type] if add else del_permission[user_type]
 
         # Check if command sender has permission
-        author_name: TwitchUser = ctx.author
-        if not permission_function(author_name.name):
+        author_name: str = ctx.author.name
+        if not permission_function(author_name):
             return
 
-        logger.info(f"Trying to edit users ({ctx.author.name}): {user_names}")
+        logger.info(f"Trying to edit users ({author_name}): {user_names}")
         add_dict = {
             "superadmin": self.users.add_super_admin,
             "admin": self.users.add_admin,
@@ -309,43 +308,43 @@ class TwitchChatBot(commands.Bot):
     @commands.command(name="addsuperadmin", aliases=["addsuperadmins", "asa"])
     async def add_super_admin(self, ctx: TwitchContext):
         # Without '!addsuperadmin'
-        user_names: List[str] = ctx.content.split(" ")[1:]
+        user_names: List[str] = ctx.message.content.split(" ")[1:]
         await self.add_remove_admin_or_user(ctx, user_names, user_type="superadmin", add=True)
 
     @commands.command(name="delsuperadmin", aliases=["delsuperadmins", "dsa"])
     async def del_super_admin(self, ctx: TwitchContext):
         # Without '!delsuperadmin'
-        user_names: List[str] = ctx.content.split(" ")[1:]
+        user_names: List[str] = ctx.message.content.split(" ")[1:]
         await self.add_remove_admin_or_user(ctx, user_names, user_type="superadmin", add=False)
 
     @commands.command(name="addadmin", aliases=["addadmins", "aa"])
     async def add_admin(self, ctx: TwitchContext):
         # Without '!addadmin'
-        user_names: List[str] = ctx.content.split(" ")[1:]
+        user_names: List[str] = ctx.message.content.split(" ")[1:]
         await self.add_remove_admin_or_user(ctx, user_names, user_type="admin", add=True)
 
     @commands.command(name="deladmin", aliases=["deladmins", "da"])
     async def del_admin(self, ctx: TwitchContext):
         # Without '!deladmin'
-        user_names: List[str] = ctx.content.split(" ")[1:]
+        user_names: List[str] = ctx.message.content.split(" ")[1:]
         await self.add_remove_admin_or_user(ctx, user_names, user_type="admin", add=False)
 
     @commands.command(name="adduser", aliases=["addusers", "au"])
     async def add_user(self, ctx: TwitchContext):
         # Without '!adduser'
-        content: str = " ".join(ctx.content.split(" ")[1:])
+        content: str = " ".join(ctx.message.content.split(" ")[1:])
         await self.add_remove_admin_or_user(ctx, content.split(" "), user_type="user", add=True)
 
     @commands.command(name="deluser", aliases=["delusers", "du"])
     async def del_user(self, ctx: TwitchContext):
         # Without '!deluser'
-        user_names: List[str] = ctx.content.split(" ")[1:]
+        user_names: List[str] = ctx.message.content.split(" ")[1:]
         await self.add_remove_admin_or_user(ctx, user_names, user_type="user", add=False)
 
     @commands.command(name="addchannel", aliases=["addchannels", "ac"])
     async def add_channel(self, ctx: TwitchContext):
         # Without '!addchannel'
-        channel_names: List[str] = ctx.content.split(" ")[1:]
+        channel_names: List[str] = ctx.message.content.split(" ")[1:]
         if not self.users.allowed_to_add_channel(ctx.author.name):
             return
         logger.info(f"Trying to add channels ({ctx.author.name}): {', '.join(channel_names)}")
@@ -364,10 +363,10 @@ class TwitchChatBot(commands.Bot):
 
     @commands.command(name="delchannel", aliases=["delchannels", "dc"])
     async def del_channel(self, ctx: TwitchContext):
-        # Without '!delchannel'
-        channel_names: List[str] = ctx.content.split(" ")[1:]
         if not self.users.allowed_to_delete_channel(ctx.author.name):
             return
+        # Without '!delchannel'
+        channel_names: List[str] = ctx.message.content.split(" ")[1:]
         logger.info(f"Trying to delete channels ({ctx.author.name}): {', '.join(channel_names)}")
 
         new_channels = []
