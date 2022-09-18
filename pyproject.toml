@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "burny_test_template"
+name = "twitch_sc2_irc_bot"
 version = "0.1.0"
 description = ""
 authors = ["BuRny <gamingburny@gmail.com>"]
 packages = []
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.8, <3.11"
 aiohttp = "^3.7.4"
 idna-ssl = "^1.1.0"
 loguru = "^0.5.3"
@@ -19,5 +19,5 @@ twitchio = "^1.2.2"
 arrow = "^1.0.3"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

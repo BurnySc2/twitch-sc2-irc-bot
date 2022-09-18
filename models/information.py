@@ -3,7 +3,7 @@ import time
 
 from dataclasses import dataclass, field
 from dataclasses_json import DataClassJsonMixin
-from typing import Set, List, Optional
+from typing import Optional
 
 
 @dataclass()

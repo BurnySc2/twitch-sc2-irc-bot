@@ -1,11 +1,6 @@
 from dataclasses import dataclass, field
 from dataclasses_json import DataClassJsonMixin
-from typing import Set, List, Dict, Optional
-
-from twitchio.dataclasses import User as TwitchUser
-from twitchio.dataclasses import Channel as TwitchChannel
-from twitchio.dataclasses import Message as TwitchMessage
-from twitchio.dataclasses import Context as TwitchContext
+from typing import List, Dict, Optional
 
 from .player import Player
 from .information import Information

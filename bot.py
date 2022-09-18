@@ -1,14 +1,14 @@
 from twitchio.ext import commands
-from twitchio.dataclasses import User as TwitchUser
-from twitchio.dataclasses import Channel as TwitchChannel
-from twitchio.dataclasses import Message as TwitchMessage
-from twitchio.dataclasses import Context as TwitchContext
+from twitchio import User as TwitchUser
+from twitchio import Message as TwitchMessage
+from twitchio.ext.commands import Context as TwitchContext
+
 
 import os
 import sys
 import json
 from pathlib import Path
-from typing import Set, List, Optional, Callable
+from typing import List, Callable
 
 # https://github.com/Delgan/loguru
 from loguru import logger
@@ -18,7 +18,7 @@ logger.remove()
 # Log to console
 logger.add(sys.stdout, level="INFO")
 # Log to file, max size 5mb
-logger.add("bot.log", rotation="1 MB", level="INFO")
+logger.add("bot.log", level="INFO")
 
 from models.channels import Channels
 from models.users import Users
@@ -63,7 +63,7 @@ class TwitchChatBot(commands.Bot):
 
         super().__init__(
             # Irc token to be able to connect to chat
-            irc_token=irc_token,
+            token=irc_token,
             # Client ID to use advanced twitch API features
             client_id=client_id,
             # The name of the bot, you need to create a second twitch account for this
